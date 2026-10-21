@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi Archivo de Series</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --panel: #1b1d23;
+      --line: #30333d;
+      --accent: #ff4655;
+      --muted: #b9bbc5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: #f7f7fb;
+    }
+
+    header {
+      padding: 34px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #26212b, #15161b);
+      border-bottom: 1px solid var(--line);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.3rem);
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p,
+    .note {
+      color: var(--muted);
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: 28px auto 48px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .stat,
+    .panel,
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .stat {
+      padding: 17px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.65rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .panel {
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .form-grid,
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    button {
+      font: inherit;
+      border-radius: 9px;
+      padding: 11px 12px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      color: #f7f7fb;
+      background: #111218;
+      border: 1px solid #414450;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font-weight: 650;
+      background: var(--accent);
+      color: white;
+    }
+
+    button:hover {
+      filter: brightness(1.12);
+    }
+
+    button.secondary {
+      background: #343741;
+    }
+
+    button.danger {
+      background: #692d36;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .results-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      min-height: 190px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .rating {
+      color: #ffd86b;
+      font-weight: 750;
+      font-size: 1.05rem;
+    }
+
+    .card .spacer {
+      flex: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      width: fit-content;
+      border: 1px solid #484b56;
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 4px 9px;
+      font-size: 0.78rem;
+      margin: 7px 0 12px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 28px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: 94%;
+      }
+
+      .panel {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Mi Archivo <span>de Series</span></h1>
+    <p>Mi colección personal, mis opiniones y mis valoraciones.</p>
+  </header>
+
+  <main>
+
+    <section class="stats" aria-label="Estadísticas">
+      <div class="stat">
+        <strong id="total-series">0</strong>
+        <span>Series en mi archivo</span>
+      </div>
+
+      <div class="stat">
+        <strong id="promedio">0.00/10</strong>
+        <span>Valoración promedio</span>
+      </div>
+
+      <div class="stat">
+        <strong id="mejor-serie">—</strong>
+        <span>Una de mis mejor valoradas</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Añadir una serie</h2>
+
+      <form id="form-serie">
+        <div class="form-grid">
+
+          <div>
+            <label for="titulo">Título</label>
+            <input
+              id="titulo"
+              maxlength="100"
+              placeholder="Ej. Severance"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="valoracion">Valoración (0–10)</label>
+            <input
+              id="valoracion"
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              placeholder="Ej. 9.2"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="genero">Género (opcional)</label>
+            <input
+              id="genero"
+              maxlength="50"
+              placeholder="Ej. Ciencia ficción"
+            >
+          </div>
+
+          <div>
+            <button type="submit">＋ Añadir serie</button>
+          </div>
+
+        </div>
+      </form>
+
+      <p class="note">
+        Las series añadidas se guardan en este navegador con localStorage;
+        no se sincronizan con otros dispositivos.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Buscar y ordenar</h2>
+
+      <div class="filters">
+
+        <div>
+          <label for="busqueda">Buscar por título</label>
+          <input
+            id="busqueda"
+            type="search"
+            placeholder="Escribe un título…"
+          >
+        </div>
+
+        <div>
+          <label for="filtro-valoracion">Valoración mínima</label>
+          <select id="filtro-valoracion">
+            <option value="0">Todas las valoraciones</option>
+            <option value="7">7/10 o más</option>
+            <option value="8">8/10 o más</option>
+            <option value="9">9/10 o más</option>
+            <option value="10">10/10</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="orden">Ordenar por</label>
+          <select id="orden">
+            <option value="rating-desc">Mejor valoradas primero</option>
+            <option value="rating-asc">Menor valoración primero</option>
+            <option value="title-asc">Título (A–Z)</option>
+            <option value="title-desc">Título (Z–A)</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button id="limpiar-filtros" class="secondary" type="button">
+          Limpiar filtros
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <div class="results-head">
+        <h2>Mi colección</h2>
+        <span id="resultado-count" class="note"></span>
+      </div>
+
+      <div id="series-container" class="grid" aria-live="polite"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    Mi Archivo de Series · Proyecto personal
+  </footer>
+
+  <script src="series.js"></script>
+
+</body>
+</html>
